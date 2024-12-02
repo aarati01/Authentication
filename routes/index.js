@@ -19,10 +19,9 @@ router.get("/login", (req, res) => {
 router.get("/register", (req, res) => {
   res.render("register");
 });
-router.get("/", (req, res) => {
-    res.render("register");
-  });
-
+router.get("/secret", (req, res) => {
+  res.render("register");
+});
 
 // Dynamic file rendering route
 router.get("/:file", (req, res) => {
@@ -30,4 +29,13 @@ router.get("/:file", (req, res) => {
   res.render(filePath); // Assumes a view exists with the requested file name
 });
 
+router.post("/login", (req, res) => {
+  res.send("Login sucesfully!!");
+});
+
+
+router.post("/register", (req, res) => {
+    res.send("Register sucesfully!!");
+  });
+  
 export default router;
