@@ -1,31 +1,40 @@
 import express from "express";
 import bodyParser from "body-parser";
-import path from "path";
 import mongoose from "mongoose";
-import { Session } from "inspector/promises";
+import { fileURLToPath } from "url";
+import path from "path";
+import indexRoutes from "./routes/index.js"; // Import routes
+
+// Define __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Initialize the app
 const app = express();
 const port = 3000;
 
+// Middleware setup
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
 app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-require("./model/user");
+// Database connection
 mongoose.connect("mongodb://127.0.0.1:27017/secret", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
+// Check connection status
 const db = mongoose.connection;
-db.once("open", function () {
-  console.log("We are connected..");
+db.once("open", () => {
+  console.log("Connected to MongoDB...");
 });
-app.get("/", (req, res) => {
-  res.render("home.ejs");
-});
+
+// Routes
+app.use("/", indexRoutes); // Use imported routes
+
+// Start the server
 app.listen(port, () => {
-  console.log("server running on port 3000");
+  console.log(`Server running on http://localhost:${port}`);
 });
