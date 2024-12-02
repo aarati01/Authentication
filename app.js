@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import { fileURLToPath } from "url";
 import path from "path";
-import indexRoutes from "./routes/index.js"; // Import routes
+import indexRoutes from "./routes/index.js";
 
 // Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -25,14 +25,16 @@ mongoose.connect("mongodb://127.0.0.1:27017/secret", {
   useUnifiedTopology: true,
 });
 
-// Check connection status
-const db = mongoose.connection;
-db.once("open", () => {
+mongoose.connection.on("connected", () => {
   console.log("Connected to MongoDB...");
 });
 
+import user from "./model/user.js";
+
+const userController = import("./controller/userController.js");
+
 // Routes
-app.use("/", indexRoutes); // Use imported routes
+app.use("/", indexRoutes);
 
 // Start the server
 app.listen(port, () => {
